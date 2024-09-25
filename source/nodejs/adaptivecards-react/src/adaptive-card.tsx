@@ -21,6 +21,7 @@ export interface Props {
     onError?: Function;
     style?: object;
     hostConfig?: object;
+	customSerializationContext?: AdaptiveCards.SerializationContext;
 }
 
 const propTypes = {
@@ -66,6 +67,7 @@ export const AdaptiveCard = ({
     onError,
     style,
     hostConfig,
+	customSerializationContext,
 }: Props) => {
     const [error, setError] = useState<Error>();
     const targetRef = useRef<HTMLDivElement>(null);
@@ -122,7 +124,7 @@ export const AdaptiveCard = ({
         const card = cardRef.current;
 
         try {
-            card.parse(payload);
+            card.parse(payload, customSerializationContext);
             const result = card.render() as HTMLElement;
             const trustedHtml = (typeof window === 'undefined') ? "" : (window.trustedTypes?.emptyHTML ?? "");
             targetRef.current.innerHTML = trustedHtml as string;
